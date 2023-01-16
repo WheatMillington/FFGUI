@@ -76,8 +76,12 @@ namespace FFGUI
 
             Console.WriteLine($"Output file: {outputFile}");
 
+            // Trim the video using user inputs
+            string startSeconds = txtStart.Text;
+            string finishSeconds = txtFinish.Text;
+            
             // FFmpeg command to convert the video file
-            string command = $"-i {inputFile} -crf 18 -preset fast -c:a copy {outputFile}";
+            string command = $"-i {inputFile} -ss {startSeconds} - to {finishSeconds} -crf 18 -preset fast -c:a copy {outputFile}";
             Console.WriteLine("Using command: " + command);
 
             // Create a new process to run FFmpeg
