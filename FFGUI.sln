@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFGUI", "FFGUI\FFGUI.csproj", "{020BB454-DB0A-4DC4-B50D-66D601F1993C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{020BB454-DB0A-4DC4-B50D-66D601F1993C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{020BB454-DB0A-4DC4-B50D-66D601F1993C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{020BB454-DB0A-4DC4-B50D-66D601F1993C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{020BB454-DB0A-4DC4-B50D-66D601F1993C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {936F96B0-CEC2-45B7-BFB7-C57B2496C603}
+	EndGlobalSection
+EndGlobal
