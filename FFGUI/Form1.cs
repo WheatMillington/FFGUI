@@ -33,12 +33,13 @@ namespace FFGUI
             {
                 txtInputFile.Text = openFileDialogInput.FileName;
                 txtInputFile.Refresh();
-                string videoFilePath = "\"" + txtInputFile.Text + "\"";
-                string ffmpegOutput = RunFFmpeg("-i " + videoFilePath, txtFfmpegLocation.Text);
+                string videoFilePath = txtInputFile.Text;
+                string exeFilePath = txtFfmpegLocation.Text;
+                string ffmpegOutput = RunFFmpeg("", videoFilePath, exeFilePath);
+                
                 int startIndex = ffmpegOutput.IndexOf("Duration: ") + "Duration: ".Length;
                 int endIndex = ffmpegOutput.IndexOf(",", startIndex);
                 string duration = ffmpegOutput.Substring(startIndex, endIndex - startIndex).Trim();
-                Console.WriteLine("Duration is " + duration);
                 TimeSpan videoLength = TimeSpan.Parse(duration);
 
                 Console.WriteLine("Length in seconds: " + videoLength.TotalSeconds);
@@ -54,10 +55,14 @@ namespace FFGUI
             lblStatus.Text = "";
             lblStatus.Refresh();
 
+            // Exe file path
+            string exeFile = txtFfmpegLocation.Text;
+            Console.Writeline("Exe file: " + exeFile);
+            
             // Input file path
-            string inputFile = "\"" + txtInputFile.Text + "\"";
+            string inputFile = txtInputFile.Text;
             Console.WriteLine("Input file: " + inputFile);
-
+            
             // Output file path
             if (chkOverwrite.Checked)
             {
@@ -68,12 +73,11 @@ namespace FFGUI
             {
                 // Generate a random number between 10 and 90 and append this to the file name before the extension
                 Random rnd = new Random();
-                Console.WriteLine(inputFile.Substring(1, inputFile.Length - 2));
-                string dir = Path.GetDirectoryName(inputFile.Substring(1,inputFile.Length - 2));
-                string file = Path.GetFileNameWithoutExtension(inputFile.Substring(1, inputFile.Length - 2)) + rnd.Next(10, 90);
-                string ext = Path.GetExtension(inputFile.Substring(1, inputFile.Length - 2));
+                string dir = Path.GetDirectoryName(inputFile);
+                string file = Path.GetFileNameWithoutExtension(inputFile) + rnd.Next(10, 90);
+                string ext = Path.GetExtension(inputFile);
 
-                outputFile = $@"""{dir}\{file}{ext}""";
+                outputFile = $@"{dir}\{file}{ext}";
             }
 
             lblStatus.Text = "Creating file at " + outputFile + "\nProcessing....";
@@ -91,28 +95,45 @@ namespace FFGUI
             Console.WriteLine(targetBitrate);
             
             // FFmpeg command to convert the video file
-            string command = $"-i {inputFile} -ss {startSeconds} -to {finishSeconds} -b:v {targetBitrate} -preset fast -c:a copy {outputFile}"; //removed -crf 18
+            string command = $"-ss {startSeconds} -to {finishSeconds} -b:v {targetBitrate} -preset fast -c:a copy {outputFile}";
             Console.WriteLine("Using command: " + command);
 
             // Create a new process to run FFmpeg
-            string output = RunFFmpeg(command, txtFfmpegLocation.Text);
+            string output = RunFFmpeg(command, inputFile, exeFile);
             
-            Console.WriteLine("Creating FFMPEG process using " + txtFfmpegLocation.Text);
+            Console.WriteLine("Creating FFMPEG process using " + exeFile);
             Console.WriteLine(output);
 
-            lblStatus.Text = "Output file created at " + outputFile;
+            lblStatus.Text = lblStatus.Text + "/nOutput file created at " + outputFile;
+            
+            lnkOutputFile.Text = "Open output file";
+            lnkOutputFile.Tag = outputFile;
+            lnkOutputFolder.Text = "Open output folder";
+            lnkOutputFolder.Tag = Path.GetDirectoryName(outputFile);
             lnkOutputFile.Visible = true;
             lnkOutputFolder.Visible = true;
-            lnkOutputFile.Text = "Open output file";
-            lnkOutputFolder.Text = "Open output folder";
+        }
+        
+        void lnkOutputFile_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process process = new Process();
+            process.StartInfo.FileName = (string)lnkOutputFile.Tag;
+            process.Start();
+        }
+        
+        void lnkOutputFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process process = new Process();
+            process.StartInfo.FileName = (string)lnkOutputFolder.Tag;
+            process.Start();
         }
 
-        static string RunFFmpeg(string arguments, string ffmpegloc)
+        static string RunFFmpeg(string arguments, string videoloc, string ffmpegloc)
         {
             Console.WriteLine("Starting ffmpeg process");
             Process process = new Process();
-            process.StartInfo.FileName = ffmpegloc;
-            process.StartInfo.Arguments = arguments;
+            process.StartInfo.FileName = "\"" + ffmpegloc + "\"";
+            process.StartInfo.Arguments = "-i \"" + videoloc + "\" " + arguments;
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.RedirectStandardOutput = true;
