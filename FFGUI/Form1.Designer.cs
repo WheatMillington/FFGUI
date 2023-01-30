@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmGUI));
             this.txtFfmpegLocation = new System.Windows.Forms.TextBox();
             this.txtInputFile = new System.Windows.Forms.TextBox();
             this.lblExeLocation = new System.Windows.Forms.Label();
@@ -44,6 +45,10 @@
             this.lblStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFMPEG = new System.Windows.Forms.OpenFileDialog();
             this.openFileDialogInput = new System.Windows.Forms.OpenFileDialog();
+            this.lblFileSize = new System.Windows.Forms.Label();
+            this.txtFileSize = new System.Windows.Forms.TextBox();
+            this.lnkOutputFolder = new System.Windows.Forms.LinkLabel();
+            this.lnkOutputFile = new System.Windows.Forms.LinkLabel();
             this.grpFileInfo.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -61,7 +66,7 @@
             this.txtInputFile.Name = "txtInputFile";
             this.txtInputFile.Size = new System.Drawing.Size(399, 20);
             this.txtInputFile.TabIndex = 1;
-            this.txtInputFile.Text = "C:\\ffmpeg\\bin\\vid.mp4";
+            this.txtInputFile.TextChanged += new System.EventHandler(this.txtInputFile_TextChanged);
             // 
             // lblExeLocation
             // 
@@ -71,7 +76,6 @@
             this.lblExeLocation.Size = new System.Drawing.Size(110, 13);
             this.lblExeLocation.TabIndex = 2;
             this.lblExeLocation.Text = "FFMPEG exe location";
-            this.lblExeLocation.Click += new System.EventHandler(this.label1_Click);
             // 
             // lblInputFile
             // 
@@ -106,6 +110,7 @@
             this.txtStart.Name = "txtStart";
             this.txtStart.Size = new System.Drawing.Size(100, 20);
             this.txtStart.TabIndex = 6;
+            this.txtStart.Text = "0";
             // 
             // txtFinish
             // 
@@ -113,11 +118,12 @@
             this.txtFinish.Name = "txtFinish";
             this.txtFinish.Size = new System.Drawing.Size(100, 20);
             this.txtFinish.TabIndex = 7;
+            this.txtFinish.Text = "0";
             // 
             // chkOverwrite
             // 
             this.chkOverwrite.AutoSize = true;
-            this.chkOverwrite.Location = new System.Drawing.Point(15, 119);
+            this.chkOverwrite.Location = new System.Drawing.Point(15, 148);
             this.chkOverwrite.Name = "chkOverwrite";
             this.chkOverwrite.Size = new System.Drawing.Size(128, 17);
             this.chkOverwrite.TabIndex = 8;
@@ -126,7 +132,7 @@
             // 
             // btnGo
             // 
-            this.btnGo.Location = new System.Drawing.Point(15, 143);
+            this.btnGo.Location = new System.Drawing.Point(15, 171);
             this.btnGo.Name = "btnGo";
             this.btnGo.Size = new System.Drawing.Size(75, 23);
             this.btnGo.TabIndex = 9;
@@ -159,7 +165,7 @@
             this.grpFileInfo.Controls.Add(this.lblStatus);
             this.grpFileInfo.Location = new System.Drawing.Point(251, 65);
             this.grpFileInfo.Name = "grpFileInfo";
-            this.grpFileInfo.Size = new System.Drawing.Size(393, 100);
+            this.grpFileInfo.Size = new System.Drawing.Size(393, 70);
             this.grpFileInfo.TabIndex = 12;
             this.grpFileInfo.TabStop = false;
             this.grpFileInfo.Text = "File Info";
@@ -182,11 +188,54 @@
             this.openFileDialogInput.FileName = "openFileDialogInput";
             this.openFileDialogInput.Title = "Select an input file";
             // 
+            // lblFileSize
+            // 
+            this.lblFileSize.AutoSize = true;
+            this.lblFileSize.Location = new System.Drawing.Point(12, 118);
+            this.lblFileSize.Name = "lblFileSize";
+            this.lblFileSize.Size = new System.Drawing.Size(98, 13);
+            this.lblFileSize.TabIndex = 13;
+            this.lblFileSize.Text = "Target file size (mb)";
+            // 
+            // txtFileSize
+            // 
+            this.txtFileSize.Location = new System.Drawing.Point(133, 115);
+            this.txtFileSize.Name = "txtFileSize";
+            this.txtFileSize.Size = new System.Drawing.Size(100, 20);
+            this.txtFileSize.TabIndex = 14;
+            this.txtFileSize.Text = "15";
+            // 
+            // lnkOutputFolder
+            // 
+            this.lnkOutputFolder.AutoSize = true;
+            this.lnkOutputFolder.Location = new System.Drawing.Point(257, 142);
+            this.lnkOutputFolder.Name = "lnkOutputFolder";
+            this.lnkOutputFolder.Size = new System.Drawing.Size(33, 13);
+            this.lnkOutputFolder.TabIndex = 15;
+            this.lnkOutputFolder.TabStop = true;
+            this.lnkOutputFolder.Text = "folder";
+            this.lnkOutputFolder.Visible = false;
+            // 
+            // lnkOutputFile
+            // 
+            this.lnkOutputFile.AutoSize = true;
+            this.lnkOutputFile.Location = new System.Drawing.Point(257, 171);
+            this.lnkOutputFile.Name = "lnkOutputFile";
+            this.lnkOutputFile.Size = new System.Drawing.Size(20, 13);
+            this.lnkOutputFile.TabIndex = 16;
+            this.lnkOutputFile.TabStop = true;
+            this.lnkOutputFile.Text = "file";
+            this.lnkOutputFile.Visible = false;
+            // 
             // frmGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(657, 178);
+            this.ClientSize = new System.Drawing.Size(657, 204);
+            this.Controls.Add(this.lnkOutputFile);
+            this.Controls.Add(this.lnkOutputFolder);
+            this.Controls.Add(this.txtFileSize);
+            this.Controls.Add(this.lblFileSize);
             this.Controls.Add(this.grpFileInfo);
             this.Controls.Add(this.btnOpenFile);
             this.Controls.Add(this.btnExeLocation);
@@ -200,6 +249,7 @@
             this.Controls.Add(this.lblExeLocation);
             this.Controls.Add(this.txtInputFile);
             this.Controls.Add(this.txtFfmpegLocation);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmGUI";
             this.Text = "FFMPEG GUI";
             this.grpFileInfo.ResumeLayout(false);
@@ -227,6 +277,10 @@
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.OpenFileDialog openFileDialogFFMPEG;
         private System.Windows.Forms.OpenFileDialog openFileDialogInput;
+        private System.Windows.Forms.Label lblFileSize;
+        private System.Windows.Forms.TextBox txtFileSize;
+        private System.Windows.Forms.LinkLabel lnkOutputFolder;
+        private System.Windows.Forms.LinkLabel lnkOutputFile;
     }
 }
 
