@@ -62,11 +62,13 @@
             // 
             // txtInputFile
             // 
+            this.txtInputFile.AllowDrop = true;
             this.txtInputFile.Location = new System.Drawing.Point(133, 35);
             this.txtInputFile.Name = "txtInputFile";
             this.txtInputFile.Size = new System.Drawing.Size(399, 20);
             this.txtInputFile.TabIndex = 1;
-            this.txtInputFile.TextChanged += new System.EventHandler(this.txtInputFile_TextChanged);
+            this.txtInputFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtInputFile_DragDrop);
+            this.txtInputFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtInputFile_DragEnter);
             // 
             // lblExeLocation
             // 
@@ -129,6 +131,7 @@
             this.chkOverwrite.TabIndex = 8;
             this.chkOverwrite.Text = "Overwrite source file?";
             this.chkOverwrite.UseVisualStyleBackColor = true;
+            this.chkOverwrite.Visible = false;
             // 
             // btnGo
             // 
@@ -215,6 +218,7 @@
             this.lnkOutputFolder.TabStop = true;
             this.lnkOutputFolder.Text = "folder";
             this.lnkOutputFolder.Visible = false;
+            this.lnkOutputFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkOutputFolder_LinkClicked);
             // 
             // lnkOutputFile
             // 
@@ -226,6 +230,7 @@
             this.lnkOutputFile.TabStop = true;
             this.lnkOutputFile.Text = "file";
             this.lnkOutputFile.Visible = false;
+            this.lnkOutputFile.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkOutputFile_LinkClicked);
             // 
             // frmGUI
             // 

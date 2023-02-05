@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Xml.Linq;
 
 namespace FFGUI
 {
@@ -33,19 +35,25 @@ namespace FFGUI
             {
                 txtInputFile.Text = openFileDialogInput.FileName;
                 txtInputFile.Refresh();
-                string videoFilePath = txtInputFile.Text;
-                string exeFilePath = txtFfmpegLocation.Text;
-                string ffmpegOutput = RunFFmpeg("", videoFilePath, exeFilePath);
-                
-                int startIndex = ffmpegOutput.IndexOf("Duration: ") + "Duration: ".Length;
-                int endIndex = ffmpegOutput.IndexOf(",", startIndex);
-                string duration = ffmpegOutput.Substring(startIndex, endIndex - startIndex).Trim();
-                TimeSpan videoLength = TimeSpan.Parse(duration);
 
-                Console.WriteLine("Length in seconds: " + videoLength.TotalSeconds);
-                txtStart.Text = "0";
-                txtFinish.Text = videoLength.TotalSeconds.ToString();
+                LoadInputFile(openFileDialogInput.FileName, txtFfmpegLocation.Text);                
             }
+        }
+
+        private void LoadInputFile(string filename, string exename)
+        {
+            string videoFilePath = filename;
+            string exeFilePath = exename;
+            string ffmpegOutput = RunFFmpeg("", videoFilePath, exeFilePath);
+
+            int startIndex = ffmpegOutput.IndexOf("Duration: ") + "Duration: ".Length;
+            int endIndex = ffmpegOutput.IndexOf(",", startIndex);
+            string duration = ffmpegOutput.Substring(startIndex, endIndex - startIndex).Trim();
+            TimeSpan videoLength = TimeSpan.Parse(duration);
+
+            Console.WriteLine("Length in seconds: " + videoLength.TotalSeconds);
+            txtStart.Text = "0";
+            txtFinish.Text = videoLength.TotalSeconds.ToString();
         }
 
         private void btnGo_Click(object sender, EventArgs e)
@@ -57,7 +65,7 @@ namespace FFGUI
 
             // Exe file path
             string exeFile = txtFfmpegLocation.Text;
-            Console.Writeline("Exe file: " + exeFile);
+            Console.WriteLine("Exe file: " + exeFile);
             
             // Input file path
             string inputFile = txtInputFile.Text;
@@ -104,7 +112,7 @@ namespace FFGUI
             Console.WriteLine("Creating FFMPEG process using " + exeFile);
             Console.WriteLine(output);
 
-            lblStatus.Text = lblStatus.Text + "/nOutput file created at " + outputFile;
+            lblStatus.Text = lblStatus.Text + "\nOutput file created at " + outputFile;
             
             lnkOutputFile.Text = "Open output file";
             lnkOutputFile.Tag = outputFile;
@@ -119,13 +127,37 @@ namespace FFGUI
             Process process = new Process();
             process.StartInfo.FileName = (string)lnkOutputFile.Tag;
             process.Start();
+            Console.WriteLine("Opening file....");
         }
         
         void lnkOutputFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process process = new Process();
-            process.StartInfo.FileName = (string)lnkOutputFolder.Tag;
+            process.StartInfo.FileName = "explorer.exe";
+            process.StartInfo.Arguments = System.IO.Path.Combine((string)lnkOutputFolder.Tag);
             process.Start();
+            Console.WriteLine("Opening folder....");
+        }
+
+        void txtInputFile_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void txtInputFile_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            txtInputFile.Text = files[0];
+            txtInputFile.Refresh();
+
+            LoadInputFile(files[0], txtFfmpegLocation.Text);
         }
 
         static string RunFFmpeg(string arguments, string videoloc, string ffmpegloc)
@@ -151,11 +183,6 @@ namespace FFGUI
             process.WaitForExit();
             
             return error;
-        }
-
-        private void txtInputFile_TextChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }
