@@ -131,6 +131,7 @@
             this.chkOverwrite.TabIndex = 8;
             this.chkOverwrite.Text = "Overwrite source file?";
             this.chkOverwrite.UseVisualStyleBackColor = true;
+            this.chkOverwrite.Visible = false;
             // 
             // btnGo
             // 
