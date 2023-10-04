@@ -103,7 +103,7 @@ namespace FFGUI
             Console.WriteLine(targetBitrate);
             
             // FFmpeg command to convert the video file
-            string command = $"-ss {startSeconds} -to {finishSeconds} -b:v {targetBitrate} -preset fast -c:a copy {outputFile}";
+            string command = $"-ss {startSeconds} -to {finishSeconds} -b:v {targetBitrate} -preset fast -c:a copy \"{outputFile}\"";
             Console.WriteLine("Using command: " + command);
 
             // Create a new process to run FFmpeg
@@ -134,7 +134,7 @@ namespace FFGUI
         {
             Process process = new Process();
             process.StartInfo.FileName = "explorer.exe";
-            process.StartInfo.Arguments = System.IO.Path.Combine((string)lnkOutputFolder.Tag);
+            process.StartInfo.Arguments = System.IO.Path.Combine((string)lnkOutputFolder.Tag); // this is supposed to select the file when the folder is opened, but it doesn't work
             process.Start();
             Console.WriteLine("Opening folder....");
         }
@@ -165,7 +165,7 @@ namespace FFGUI
             Console.WriteLine("Starting ffmpeg process");
             Process process = new Process();
             process.StartInfo.FileName = "\"" + ffmpegloc + "\"";
-            process.StartInfo.Arguments = "-i \"" + videoloc + "\" " + arguments;
+            process.StartInfo.Arguments = "-y -i \"" + videoloc + "\" " + arguments;
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.RedirectStandardOutput = true;
